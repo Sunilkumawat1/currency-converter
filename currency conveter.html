@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Currency Exchanger</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="main.css">
+    </head>
+	<style>
+	@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    font-family: 'Nunito',sans-serif;
+}
+
+.container{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+    background: #fafafa;
+    box-shadow: 0px 2px 8px rgba(30,30,30,.3);
+}
+.container h1{
+    padding: 8px 16px;
+    text-align: center;
+    background-color: #00796b;
+    color:  #fafafa;
+    border-radius: 8px 8px 0 0;
+
+}
+.app{
+    padding: 8px 16px;
+}
+.app button{
+    border: none;
+    background-color: #00796b;
+    color: #fafafa;
+    border-radius: 3px;
+    padding: 8px 12px;
+    margin: 8px 10px;
+}
+.app input{
+    padding: 8px 15px;
+    margin: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #00796b;
+}
+.app select{
+    padding: 8px 15px;
+    margin: 8px 10px;
+    border-radius: 5px;
+    border: 1px solid #00796b;
+}
+.app p{
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    margin: 15px 0;
+}
+	</style>
+    <body>
+        <div class="container">
+            <h1>Currency Exchanger</h1>
+            <div class="app">
+                
+                   <input id="value" type="text">
+                   <label>From : </label>
+                   <select id="from"></select>
+                   <label>To :</label>
+                   <select id="to"></select>
+                   <button id="btn">Convert</button><br>
+                <p id="result"></p>
+            </div>
+        </div>
+        
+        <script src="main.js" async defer></script>
+    </body>
+	<script>
+	//Fetching the Code list
+let currency_code = ["CAD","HKD","ISK","PHP","DKK","HUF","CZK","AUD","RON","SEK","IDR","INR","BRL","RUB","HRK","JPY","THB","CHF","SGD","PLN","BGN","TRY","CNY","NOK","NZD","ZAR","USD","MXN","ILS","GBP","KRW","MYR","EUR"];
+let from = document.querySelector('#from');
+let to = document.querySelector('#to');
+let btn = document.querySelector('#btn');
+let input = document.querySelector('#value')
+let rslt = document.querySelector('#result');
+for(let i = 0;i<currency_code.length;i++){
+    let opt1 = document.createElement('option');
+    opt1.appendChild(document.createTextNode(currency_code[i]));
+    opt1.value = currency_code[i];
+    let opt2 = document.createElement('option');
+    opt2.appendChild(document.createTextNode(currency_code[i]));
+    opt2.value = currency_code[i];
+    from.appendChild(opt1);
+    to.appendChild(opt2);
+}
+
+
+btn.addEventListener('click', function(){
+    let from_value = from.value;
+    let to_value = to.value;
+    let url = "https://api.exchangeratesapi.io/latest?base="+from_value;
+    let val = input.value;
+    console.log(val);
+    fetch(url)
+    .then(response =>response.json().then(data => {
+        console.log(data.rates[to_value])
+        let rate = data.rates[to_value];
+        console.log(val * rate)
+        let res = val+" "+from_value+" = "+ (val * rate)+ " " + to_value;
+        rslt.innerHTML = res;
+    }))
+    .catch(err =>{
+    console.log(err);
+    });
+
+});
+	</script>
+</html>
